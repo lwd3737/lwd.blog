@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load custom_filter %}
+
+{% block title %}
+<title>{{ article.title }}</title>
+{% endblock %}
+
+{% block meta %}
+<meta name='keywords'
+    content='{{ article.title }},{% for tag in article.tags.all %}{{ tag }}{% endfor %}
+      ,{{ article.category }}' />
+<meta name='description' content='{{ artice.digest|safe }}'>
+{% endblock %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'css/detail.css' %}?ver=1">
+<link rel="stylesheet" href="{% static 'css/comment.css' %}?ver=1">
+<link rel="stylesheet" href="{% static 'css/prism.css' %}">
+<script type="text/javascript" src="{% static 'js/prism.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="mysection content">
+  <article>
+    <h3 class='article-title'>{{ article.title }}</h3>
+    <div class="post-line box-ui">
+      <ul>
+        <li>
+          <a title="{{ article.author }}: {{ article.created_time }}에 공개">
+            <i class=''></i>
+            <time>{{ article.created_time }}</time>
+          </a>
+        </li>
+        <li>
+          <i class="">{{ article.author }}</i>
+        </li>
+        <li>
+          <a href="#comment" title="댓글로 이동">{{ article.comment }}</a>
+        </li>
+        <li>
+          <a title="{{ article.view }}">
+            <i class=''>{{ article.view }}</i>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="article-content markdown-body">
+      <div class="post-content">
+        <p>
+          <b id='anchor-content-toggle' style="cursor:pointer;">
+            목록[-]
+          </b>
+        </p>
+        <div class="blog-anchor">
+          <div id="anchor-content"></div>
+        </div>
+        {{ article.content|custom_markdown|safe }}
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="article-tag">
+      <ul>
+        <li>
+          <a href="<!--{% url 'blog:article' article.category.pk %}-->"
+              title="카테고리: {{ article.category }}">
+            {{ article.category }}
+          </a>
+        </li>
+
+        {% for tag in article.tags.all %}
+        <li>
+          <a href="<!--{% url 'blog:tag' tag.tag_name %}}-->"
+              title="태그: {{ tag.tag_name }}">
+            {{ tag.tag_name }}
+          </a>&nbsp;
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class='my-response'>
+      <div class="claps">
+
+      </div>
+      <div class="share">
+
+      </div>
+    </div>
+
+    <!--댓글-->
+    <p class="comment-toggle" data-load="false" data-show="false"
+        data-count="{{ article.comments.count }}">
+        <img width="17" height="17" src="{% static 'icon/comment.svg' %}">
+        </img>
+      {% if article.comments.exists %}
+        댓글 {{ article.comments.count|default:'0' }}개
+      {% else %}
+        댓글 달기
+      {% endif %}
+    </p>
+    <div class="comment-container">
+    </div>
+  </article>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+  function generateContentList(){
+   $('.post-content').find('h2,h3').each(function(i, item){
+    var tag = item.tagName.toLowerCase();
+    $('#anchor-content').append(`<li><a class="new-${tag} anchor-link" href="#anchor${i}">` + $(this).text() + `</a></li>`);
+    $('.new-h2').css('margin-left', 0);
+    $('.new-h3').css('margin-left', 20);
+    $('.new-h4').css('margin-left', 40);
+    $('.new-h5').css('margin-left', 60);
+    $('.new-h6').css('margin-left', 80);
+   });
+
+   $('#anchor-content-toggle').click(function(ev){
+    var text = $(this).html();
+
+    if(text == '목록[-]'){
+      $(this).html('목록[+]')
+             .attr('title', '열기');
+    }
+    else{
+      $(this).html('목록[+]')
+             .attr('title', '닫기');
+    }
+    $('#anchor-content').toggle();
+   })
+  }
+  generateContentList();
+</script>
+<script type="text/javascript">
+  const comment_url = '{% url "blog:comments_display" article.pk %}';
+  const token = '{{ csrf_token }}';
+</script>
+<script type="text/javascript" src="{% static 'js/comment.js' %}?ver=1"></script>
+{% endblock %}

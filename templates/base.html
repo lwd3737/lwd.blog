@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en" dir="ltr">
+  <head>
+    {% block title %}
+    <title>lwd3737's blog</title>
+    {% endblock %}
+
+    <meta charset='UTF-8'>
+    <meta name="keywords" content="Python,Django">
+    <meta name="author" content="lwd3737">
+    <meta name="viewport" content="width=deveice-width, initial-scale=1.0 user-scalable='no'">
+    {% block meta %}
+    {% endblock %}
+
+    <!--CSS-->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/swiper.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}?ver=2">
+    {% block extra_style %}
+    {% endblock %}
+
+    <!--JS-->
+    <script type="text/javascript" src="{% static 'js/jquery.3.4.1.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/swiper.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.bundle.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/utility.js' %}?ver=1">
+    </script>
+  </head>
+  <body>
+    {% include 'blog/header.html' %}
+
+    <div class="container-fluid">
+      {% block content %}
+      {% endblock %}
+    </div>
+
+    {% include 'blog/right.html' %}
+
+    {% include 'blog/footer.html' %}
+
+    {% block extra_js %}
+    {% endblock %}
+  </body>
+</html>

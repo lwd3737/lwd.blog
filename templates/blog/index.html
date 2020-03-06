@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class='mysection'>
+  <div class="swiper-container">
+    <ul class="swiper-wrapper slides">
+      <li class="swiper-slide">
+        <a href="#" title='배경'>
+          <img src="https://specials-images.forbesimg.com/imageserve/5d2d80a04c687b00085cc935/960x0.jpg?fit=scale" alt="배경">
+        </a>
+        <!--Add Pagination-->
+        <div class="swiper-pagination"></div>
+      </li>
+      <li class="swiper-slide">
+        <a href="#" tite='Life is short, use Python'>
+          <img src="data:image/png;base64,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" alt="Life is short, use Python">
+        </a>
+        <!--Add Pagination-->
+        <div class="swiper-pagination"></div>
+        <span class='slide-title'></span>
+      </li>
+    </ul>
+
+    <!--Add Arrows-->
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+  </div>
+
+  <div class="article-list">
+    <h4 class='home-h4'>
+      <small>New Article</small>
+    </h4>
+    <ul>
+      {% for article in article_list %}
+      <li id='new' class="box-ui">
+        <div class="article-img">
+          <img src="{{ article.picture }}" alt="{{ article.title }}" title="{{ article.title }}">
+        </div>
+        <div class="article-right">
+          <h4 class="blue-text">
+            <a href="{% url 'blog:detail' article.pk %}" title="{{ article.title }}">
+              {{ article.title }}
+            </a>
+          </h4>
+          <p>{{ article.digest}}</p>
+          <ul>
+            <li>
+              <a title='{{ article.created_time }} 개시'>
+                <i>{{ article.date_time }}</i>
+              </a>
+            </li>
+            <li>
+              <a href="#" title="저자: {{ article.author }}">
+                <i>{{ article.author }}</i>
+              </a>
+            </li>
+            <li>
+              <a href="#" title="댓글이 {{ article.comment }개 있습니다.}">
+                <i>{{ article.comment }}</i>
+              </a>
+            </li>
+            <li>
+              <a href="#" title="{{ article.view }}명이 이 글을 봤습니다.">
+                <i>{{ article.view }}</i>
+              </a>
+            </li>
+            <li>
+              <a href="#" title="카테고리">
+                <i>{{ article.category }}</i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="article-list">
+    <h4 class="index-title home-h4">
+      <small>Hot Article</small>
+    </h4>
+    <ul>
+      {% for article in article_rank %}
+      <li id='Hot' class="box-ui">
+        <div class="article-img">
+          <img src="{{ article.picture }}" alt="{{ article.title }}" title="{{ article.title }}">
+        </div>
+        <div class="article-right">
+          <h4 class="blue-text">
+            <a href="{% url 'blog:detail' article.pk %}" title="{{ article.title }}">
+              {{ article.title }}
+            </a>
+          </h4>
+          <p>{{ article.digest}}</p>
+          <ul>
+            <li>
+              <a title='{{ article.created_time }} 개시'>
+                <i>{{ article.date_time }}</i>
+              </a>
+            </li>
+            <li>
+              <a href="#" title="저자: {{ article.author }}">
+                <i>{{ article.author }}</i>
+              </a>
+            </li>
+            <li>
+              <a href="#" title="댓글이 {{ article.comment }개 있습니다.}">
+                <i>{{ article.comment }}</i>
+              </a>
+            </li>
+            <li>
+              <a href="#" title="{{ article.view }}명이 이 글을 봤습니다.">
+                <i>{{ article.view }}</i>
+              </a>
+            </li>
+            <li>
+              <a href="#" title="카테고리">
+                <i>{{ article.category }}</i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+$(function(){
+  var swiper = new Swiper('.swiper-container', {
+    autoHeight:true,
+    centeredSlides:true,
+    pagination:{
+      el:'.swiper-pagination',
+      type: 'fraction'
+    },
+    navigation:{
+      nextEl:'.swiper-button-next',
+      prevEl:'.swiper-button-prev'
+    },
+    autoplay:{
+      delay:5500,
+    }
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,216 @@
+{% load staticfiles %}
+
+<div class="comment-container-inner">
+  <div class="comment-form-wrapper box-ui" id="comment-form">
+    {% if user.is_authenticated %}
+    <form class="authenticated-form" method="post">
+      {% csrf_token %}
+      <div class="comment-text">
+        {{ form.text }}
+      </div>
+      <div class="submit-wrapper">
+        <input class="reply-btn" type="submit" value="댓글 작성">
+      </div>
+    </form>
+    {% else %}
+    <form class="non-authenticated-form" action="" method="post">
+      <div class="comment-text">
+        <textarea type='text' disabled='true'>댓글을 작성하려면 로그인 해주세요.</textarea>
+      </div>
+    </form>
+    {% endif %}
+  </div>
+
+  <hr class="comment-between">
+
+  <ul class="comment-list" data-last-page="{{ pagecomments.paginator.num_pages }}">
+    {% if comments.exists %}
+      {% for comment in pagecomments %}
+      <div class="comment-item-wrapper" data-comment-id="{{ comment.pk }}">
+        <li class="comment-item">
+          <div class="comment-header">
+            {% if user.is_authenticated %}
+            <div class="options dropdown">
+              <a class="dropdown-toggle" href="#" role="button" id="optionMenu" data-toggle="dropdown">
+                <img width="17" height="17" src="{% static 'icon/options.svg' %}"></img>
+              </a>
+
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="option dropdown-item" id="edit">수정</a>
+                <a class="option dropdown-item" id="delete">삭제</a>
+              </div>
+            </div>
+            <div class="user-profile">
+              {{ comment.user }}
+            </div>
+            <div class="last-modified-time">
+              {{ comment.updated_time_format }}
+            </div>
+            {% endif %}
+          </div>
+          <div class="comment-text">
+            {{ comment.text }}
+          </div>
+          {% if not comment.replies.exists %}
+          <button class="reply-btn" data-show="false">댓글 달기</button>
+          {% else %}
+          <button class='reply-btn' data-show="false">
+            댓글 {{ comment.replies.count }}개 보기
+          </button>
+          {% endif %}
+        </li>
+
+        <div class="comment-reply-wrapper">
+          <ul class="comment-reply-list" data-count="{{ comment.replies.count }}">
+            {% for reply in comment.replies.replies_order_by  %}
+            <li class="comment-reply-item" data-reply-id="{{ reply.pk }}">
+              <div class="comment-header">
+                {% if user.is_authenticated %}
+                <div class="options dropdown">
+                  <a class="dropdown-toggle" href="#" role="button" id="optionMenu" data-toggle="dropdown">
+                    <img width="17" height="17" src="{% static 'icon/options.svg' %}"></img>
+                  </a>
+
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="option dropdown-item" id="edit">수정</a>
+                    <a class="option dropdown-item" id="delete">삭제</a>
+                  </div>
+                </div>
+                {% endif %}
+                <div class="user-profile">
+                  {{ reply.user }}
+                </div>
+                <div class="last-modified-time">
+                  {{ reply.updated_time_format }}
+                </div>
+              </div>
+              <div class="comment-text">
+                {{ reply.text }}
+              </div>
+              <button class='reply-btn'>댓글 달기</button>
+            </li>
+            {% endfor %}
+          </ul>
+
+          <div class="comment-reply-form-wrapper box-ui">
+            {% if user.is_authenticated %}
+            <form class="authenticated-form" method="post">
+              {% csrf_token %}
+              <div class="comment-text" contenteditable="true">
+              </div>
+              <div class="submit-wrapper">
+                <input class="reply-btn" type="submit" value="댓글 작성">
+              </div>
+            </form>
+            {% else %}
+            <form class="non-authenticated-form" action="" method="post">
+              <div class="comment-text">
+                <textarea type='text' disabled='true'>댓글을 작성하려면 로그인 해주세요.</textarea>
+              </div>
+            </form>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <hr class="comment-between">
+      {% endfor %}
+    {% endif %}
+  </ul>
+</div>
+
+<div class="comment-layer">
+  <div class="comment-form-wrapper box-ui">
+    {% if user.is_authenticated %}
+    <form class="authenticated-form" method="post">
+      {% csrf_token %}
+      <div class="comment-text">
+        {{ form.text }}
+      </div>
+      <div class="submit-wrapper">
+        <input class="reply-btn" type="submit" value="댓글 작성">
+      </div>
+    </form>
+    {% else %}
+    <form class="non-authenticated-form" action="" method="post">
+      <div class="comment-text">
+        <textarea type='text' disabled='true'>댓글을 작성하려면 로그인 해주세요.</textarea>
+      </div>
+    </form>
+    {% endif %}
+  </div>
+
+  <div class="comment-item-wrapper" data-comment-id="">
+    <li class="comment-item">
+      <div class="comment-header">
+        <div class="user-profile">
+        </div>
+        <div class="last-modified-time">
+        </div>
+        <div class="options dropdown">
+          <a class="dropdown-toggle" href="#" role="button" id="optionMenu" data-toggle="dropdown">
+            <img width="17" height="17" src="{% static 'icon/options.svg' %}"></img>
+          </a>
+
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="option dropdown-item" id="edit">수정</a>
+            <a class="option dropdown-item" id="delete">삭제</a>
+          </div>
+        </div>
+      </div>
+      <div class="comment-text">
+      </div>
+      <button class="reply-btn" data-show='false'>
+        댓글 달기
+      </button>
+    </li>
+
+    <div class="comment-reply-wrapper" data-show='false'>
+      <ul class="comment-reply-list" data-show="false" data-count="0">
+      </ul>
+
+      <div class="comment-reply-form-wrapper box-ui">
+        {% if user.is_authenticated %}
+        <form class="authenticated-form" method="post">
+          {% csrf_token %}
+          <div class="comment-text" contenteditable="true">
+            {{ form.text }}
+          </div>
+          <div class="submit-wrapper">
+            <input type="submit" value="댓글 작성">
+          </div>
+        </form>
+        {% else %}
+        <form class="non-authenticated-form" action="" method="post">
+          <div class="comment-text">
+            <textarea type='text' disabled='true'>댓글을 작성하려면 로그인 해주세요.</textarea>
+          </div>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+    <hr class="comment-between">
+  </div>
+
+
+  <li class="comment-reply-item" data-reply-id="">
+    <div class="comment-header">
+      <div class="options dropdown">
+        <a class="dropdown-toggle" href="#" role="button" id="optionMenu" data-toggle="dropdown">
+          <img width="17" height="17" src="{% static 'icon/options.svg' %}"></img>
+        </a>
+
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="option dropdown-item" id="edit">수정</a>
+          <a class="option dropdown-item" id="delete">삭제</a>
+        </div>
+      </div>
+      <div class="user-profile">
+      </div>
+      <div class="last-modified-time">
+      </div>
+    </div>
+    <div class="comment-text">
+    </div>
+    <button class='reply-btn' data-show="false">댓글 달기</button>
+  </li>
+</div>
