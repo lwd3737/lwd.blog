@@ -1,8 +1,9 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse, Http404
+from django.shortcuts import render, get_object_or_404, redirect, reverse
+from django.http import JsonResponse, Http404, HttpResponse
 from django.core.paginator import Paginator
-from .models import Category, Article, Comment
-from .forms import CommentForm
+from django.contrib.auth.decorators import login_required
+from .models import Category, Article, Comment, Tag
+from .forms import CommentForm, ArticleForm
 
 def index(request):
     #blog homepage
@@ -14,15 +15,21 @@ def index(request):
 
 def detail(request, pk):
     article = get_object_or_404(Article, pk=pk)
-    article.view_count()
+
+    print('article',article)
+    if article.is_public:
+        article.view_count()
+    else:
+        if article.author != request.user:
+            raise Http404('비공개 게시물입니다.')
 
     return render(request, 'blog/detail.html', {
-        'article':article,
+        'article': article,
     })
 
 def comments_display(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
-    comments = article.comments.prefetch_related('replies').all()
+    comments = article.comments.prefetch_related('replies').filter(is_reply=False)
     paginator = Paginator(comments, 10)
     page = request.GET.get('page')
     pagecomments = paginator.get_page(page)
@@ -35,6 +42,7 @@ def comments_display(request, article_pk):
         'article': article,
     })
 
+@login_required
 def comment_new(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
     print(request.POST)
@@ -59,6 +67,7 @@ def edit_fail(message_str):
     }
     return JsonResponse(message)
 
+@login_required
 def comment_edit(request, article_pk, comment_pk):
 
     if request.method == 'POST':
@@ -91,7 +100,7 @@ def comment_edit(request, article_pk, comment_pk):
     else:
         edit_fail('Get 요청으로 댓글을 수정할 수 없습니다.')
 
-
+@login_required
 def comment_delete(request, article_pk, comment_pk):
 
     if request.method == 'POST':
@@ -108,6 +117,7 @@ def comment_delete(request, article_pk, comment_pk):
             }
             return JsonResponse(data)
 
+@login_required
 def comment_reply_new(request, article_pk, comment_pk):
     comment = get_object_or_404(Comment, article__id=article_pk, pk=comment_pk)
     print(request.POST)
@@ -133,6 +143,7 @@ def comment_reply_new(request, article_pk, comment_pk):
             reply.article_id = article_pk
             reply.parent = comment
             reply.user = request.user
+            reply.is_reply = True
             reply.save()
 
             context.update({
@@ -145,6 +156,7 @@ def comment_reply_new(request, article_pk, comment_pk):
 
             return JsonResponse(context)
 
+@login_required
 def comment_reply_edit(request, article_pk, comment_pk, reply_pk):
 
     if request.method == 'POST':
@@ -182,7 +194,7 @@ def comment_reply_edit(request, article_pk, comment_pk, reply_pk):
     else:
         edit_fail('Get 요청으로 댓글을 수정할 수 없습니다.')
 
-
+@login_required
 def comment_reply_delete(request, article_pk, comment_pk, reply_pk):
     if request.method == 'POST':
         article = get_object_or_404(Article, pk=article_pk)
@@ -202,5 +214,68 @@ def comment_reply_delete(request, article_pk, comment_pk, reply_pk):
             }
             return JsonResponse(data)
 
-def article(request, pk):
+@login_required
+def article_new(request):
+    if request.method == 'POST':
+        form = ArticleForm(request.POST)
+
+        if form.is_valid():
+            article = form.save(commit=False)
+            print(article.is_public)
+            article.author = request.user
+            article.save()
+            return HttpResponse(reverse('blog:my_articles'))
+
+    else:
+        form = ArticleForm()
+
+    return render(request, 'blog/article_new.html', {
+        'form':form,
+    })
+
+def tag_search(request):
+    print(request.GET)
+    tag_name = request.GET.get('tag_name')
+    data = {}
+    data['tag_list'] = []
+
+    if tag_name:
+        tags = Tag.objects.filter(tag_name__icontains=tag_name)
+        data['tag_list'] = [{'tag_id': tag.id, 'tag_name': tag.name } for tag in tags]
+
+    return JsonResponse(data)
+
+@login_required
+def my_articles(request):
+    articles = Article.objects.filter(author__pk=request.user.pk)
+
+    private_articles = articles.filter(is_public=False).order_by('-updated_time')
+    public_articles = articles.filter(is_public=True).order_by('-updated_time')
+
+    return render(request, 'blog/my_articles.html', {
+        'private_articles':private_articles,
+        'public_articles': public_articles,
+    })
+
+@login_required
+def article_edit(request, article_pk):
+    article = get_object_or_404(Article, pk=article_pk, author=request.user)
+
+    if request.method == 'POST':
+        print(request.POST)
+        form = ArticleForm(request.POST, instance=article)
+
+        if form.is_valid():
+            form.save()
+
+            return redirect('blog:my_articles')
+    else:
+        form = ArticleForm(instance=article)
+
+    return render(request, 'blog/article_new.html', {
+        'form': form,
+    })
+
+@login_required
+def article_delete(request, article_pk):
     pass

@@ -57,19 +57,21 @@ article{
 }
 
 article h3{
-  text-align:center;
-  font-size:30px !important;
-  font-weight:bold !important;
-  padding:15px !important;
-  margin-bottom:20px !important;
-  line-height:30px !important;
+  font-size:30px;
+  font-weight:bold;
+  padding:15px;
+  margin-bottom:20px;
+  line-height:30px;
 }
 
 /*custom ui*/
 .box-ui{
-  box-shadow:3px 3px 10px 3px #c5bdbd73;
-  border-radius: 10px;
-  background:white;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 7px;
+  margin-bottom: 45px;
+  padding: 10px 20px;
+  font-size: 14px;
+  box-shadow: 0 1px 5px 3px rgba(0,0,0,0.04);
 }
 
 .blue-text{color:#0181da;}
@@ -169,12 +171,11 @@ article h3{
   transition:all 0.5s;
 }
 
-.article-right{
-  width:70%;
-  float:right;
+.article{
+  width:100%;
 }
 
-.article-right h4{
+.article h4{
   padding:0;
   margin:0;
   font-size:18px;
@@ -184,7 +185,7 @@ article h3{
   text-overflow:ellipsis;
 }
 
-.article-right p{
+.article p{
   font-size:13px;
   overflow:hidden;
   white-space:nowrap;
@@ -193,12 +194,13 @@ article h3{
   height:54px;
 }
 
-.article-right ul{
+.article-bottom{
   width:100%;
+  float:left;
   overflow:hidden;
 }
 
-.article-right ul li{
+.article ul li{
   float:left;
   padding:0 5px;
   font-size:12px;
@@ -209,10 +211,14 @@ article h3{
   overflow:hidden;
 }
 
-.article-right ul li:last-child{
+.article li:last-child{
   float:right;
 }
 
 /*right*/
+aside.right{
+  width:35%;
+  float:right;
+}
 
 /*footer*/

@@ -10,11 +10,11 @@
 <meta name='keywords'
     content='{{ article.title }},{% for tag in article.tags.all %}{{ tag }}{% endfor %}
       ,{{ article.category }}' />
-<meta name='description' content='{{ artice.digest|safe }}'>
+<meta name='description' content='{{ article.digest|safe }}'>
 {% endblock %}
 
 {% block extra_style %}
-<link rel="stylesheet" href="{% static 'css/detail.css' %}?ver=1">
+<link rel="stylesheet" href="{% static 'css/detail.css' %}?ver=2">
 <link rel="stylesheet" href="{% static 'css/comment.css' %}?ver=1">
 <link rel="stylesheet" href="{% static 'css/prism.css' %}">
 <script type="text/javascript" src="{% static 'js/prism.js' %}"></script>
@@ -48,14 +48,6 @@
 
     <div class="article-content markdown-body">
       <div class="post-content">
-        <p>
-          <b id='anchor-content-toggle' style="cursor:pointer;">
-            목록[-]
-          </b>
-        </p>
-        <div class="blog-anchor">
-          <div id="anchor-content"></div>
-        </div>
         {{ article.content|custom_markdown|safe }}
       </div>
     </div>
@@ -64,16 +56,9 @@
 
     <div class="article-tag">
       <ul>
-        <li>
-          <a href="<!--{% url 'blog:article' article.category.pk %}-->"
-              title="카테고리: {{ article.category }}">
-            {{ article.category }}
-          </a>
-        </li>
-
         {% for tag in article.tags.all %}
         <li>
-          <a href="<!--{% url 'blog:tag' tag.tag_name %}}-->"
+          <a href="">
               title="태그: {{ tag.tag_name }}">
             {{ tag.tag_name }}
           </a>&nbsp;
@@ -108,32 +93,21 @@
 </div>
 {% endblock %}
 
+{% block right %}
+<div class="blog-anchor">
+  <ul id="anchor-content"></ul>
+</div>
+{% endblock %}
+
 {% block extra_js %}
 <script type="text/javascript">
   function generateContentList(){
    $('.post-content').find('h2,h3').each(function(i, item){
     var tag = item.tagName.toLowerCase();
-    $('#anchor-content').append(`<li><a class="new-${tag} anchor-link" href="#anchor${i}">` + $(this).text() + `</a></li>`);
-    $('.new-h2').css('margin-left', 0);
-    $('.new-h3').css('margin-left', 20);
-    $('.new-h4').css('margin-left', 40);
-    $('.new-h5').css('margin-left', 60);
-    $('.new-h6').css('margin-left', 80);
+    $(item).attr('id', `anchor${i}`);
+    $('#anchor-content').append(`<li><a class="new-${tag} anchor-link" href="#anchor${i}">`
+       + `${i+1}. ` + $(this).text() + `</a></li>`);
    });
-
-   $('#anchor-content-toggle').click(function(ev){
-    var text = $(this).html();
-
-    if(text == '목록[-]'){
-      $(this).html('목록[+]')
-             .attr('title', '열기');
-    }
-    else{
-      $(this).html('목록[+]')
-             .attr('title', '닫기');
-    }
-    $('#anchor-content').toggle();
-   })
   }
   generateContentList();
 </script>

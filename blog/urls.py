@@ -6,7 +6,7 @@ from . import views
 app_name = 'blog'
 
 urlpatterns = [
-    path('index/', views.index, name='index'),
+    path('', views.index, name='index'),
     path('detail/<int:pk>/', views.detail, name='detail'),
     path('detail/<int:article_pk>/comments_display/', views.comments_display, name='comments_display'),
     path('detail/<int:article_pk>/comment/new/', views.comment_new, name='comment_new'),
@@ -21,12 +21,11 @@ urlpatterns = [
         views.comment_reply_edit, name='comment_reply_edit'),
     path('detail/<int:article_pk>/comment/<int:comment_pk>/reply/<int:reply_pk>/delete/',
         views.comment_reply_delete, name='comment_reply_delete'),
-    path('article/<int:pk>/', views.article, name='article'),
-    #path('about/', views.about, name='about'),
-    #path('archive', views.archive, name='archive'),
-    #path('link', views.link, name='link'),
-    #path('message', views.message, name='message'),
-    #path('getComment/', views.getComment, name='getComment'),
+    path('article/new/', views.article_new, name='article_new'),
+    path('tag/search/', views.tag_search, name='tag_search'),
+    path('my_articles/', views.my_articles, name='my_articles'),
+    path('detail/<int:article_pk>/edit/', views.article_edit, name='article_edit'),
+    path('detail/<int:article_pk>/delete/', views.article_delete, name='article_delete'),
     #path('search/', views.search, name='search'),
     #path('tag/', views.tag, name='tag'),
 ]

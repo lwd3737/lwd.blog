@@ -14,3 +14,19 @@ class CommentForm(forms.ModelForm):
 		labels = {
 			'text': '댓글',
 		}
+
+class ArticleForm(forms.ModelForm):
+	class Meta:
+		model = Article
+		fields = ['title', 'content', 'digest', 'tags', 'is_public']
+		widgets = {
+			'title': forms.TextInput(attrs={'placeholder': '제목...'}),
+			'content': forms.Textarea(attrs={'placeholder': '내용...', 'resize':'false'}),
+			'digest': forms.TextInput(attrs={'placeholder': '요약...'}),
+		}
+		labels = {
+			'title': '제목',
+			'content': '내용',
+			'digest': '요약',
+			'tags': '태그',
+		}

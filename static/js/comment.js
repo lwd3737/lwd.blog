@@ -550,7 +550,7 @@ const commentReply = {
 
     commentText.focus();
 
-    const setCursorAftertargetUser = ((container, targetUserSel, replyId) => {
+    const setCursorAfterTargetUser = ((container, targetUserSel, replyId) => {
       const range = new Range();
       const sel = window.getSelection();
       let newEl = document.createElement('span');
@@ -574,16 +574,16 @@ const commentReply = {
       targetUser.dataset['targetReplyId'] = replyId;
 
       container.appendChild(targetUser);
-      container.appendChild(document.createTextNode(' '));
       container.appendChild(newEl);
 
-      range.setStartAfter(container.querySelector('.comment-text__content'), 0);
+      range.setStartAfter(container.querySelector('.comment-text__content'), 1);
       range.collapse(true);
+
+      newEl.remove();
 
       sel.removeAllRanges();
       sel.addRange(range);
 
-      newEl.remove();
     })(commentText[0], targetUserSel, replyId);
 
     scrollTo(commentText[0]);

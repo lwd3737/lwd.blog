@@ -1,0 +1,49 @@
+.my-articles-container{
+  padding:20px 80px;
+}
+
+.my-article-head{
+  overflow:hidden;
+}
+
+h1.my-articles-title{
+  float:left;
+}
+
+.new-article-link{
+  float:right;
+  margin-top: 30px
+}
+
+.my-article-digest{
+  font-size: 18px;
+  padding: 0 0 10px 15px;
+  color: rgba(0,0,0,0.6);
+}
+
+.my-article-updated-time{
+  padding: 0 0 0 15px;
+  color:gray;
+}
+
+.my-article-head{
+  overflow: hidden;
+}
+
+h3.my-article-title{
+  float:left;
+}
+
+h3.my-article-title:hover{
+  cursor:pointer;
+}
+
+.my-article-options{
+  float:right;
+  margin-top:10px;
+}
+
+.my-article-options > a{
+  padding: 3px 5px;
+  font-size: 12px;
+}

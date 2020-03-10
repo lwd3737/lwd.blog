@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block extrastyle %}
+<script type="text/javascript" src="{% static 'js/swiper.min.js' %}"></script>
+{% endblock %}
 
 {% block content %}
 <section class='mysection'>
@@ -33,17 +38,14 @@
     <ul>
       {% for article in article_list %}
       <li id='new' class="box-ui">
-        <div class="article-img">
-          <img src="{{ article.picture }}" alt="{{ article.title }}" title="{{ article.title }}">
-        </div>
-        <div class="article-right">
+        <div class="article">
           <h4 class="blue-text">
             <a href="{% url 'blog:detail' article.pk %}" title="{{ article.title }}">
               {{ article.title }}
             </a>
           </h4>
           <p>{{ article.digest}}</p>
-          <ul>
+          <ul class='article-bottom'>
             <li>
               <a title='{{ article.created_time }} 개시'>
                 <i>{{ article.date_time }}</i>
@@ -76,55 +78,6 @@
     </ul>
   </div>
 
-  <div class="article-list">
-    <h4 class="index-title home-h4">
-      <small>Hot Article</small>
-    </h4>
-    <ul>
-      {% for article in article_rank %}
-      <li id='Hot' class="box-ui">
-        <div class="article-img">
-          <img src="{{ article.picture }}" alt="{{ article.title }}" title="{{ article.title }}">
-        </div>
-        <div class="article-right">
-          <h4 class="blue-text">
-            <a href="{% url 'blog:detail' article.pk %}" title="{{ article.title }}">
-              {{ article.title }}
-            </a>
-          </h4>
-          <p>{{ article.digest}}</p>
-          <ul>
-            <li>
-              <a title='{{ article.created_time }} 개시'>
-                <i>{{ article.date_time }}</i>
-              </a>
-            </li>
-            <li>
-              <a href="#" title="저자: {{ article.author }}">
-                <i>{{ article.author }}</i>
-              </a>
-            </li>
-            <li>
-              <a href="#" title="댓글이 {{ article.comment }개 있습니다.}">
-                <i>{{ article.comment }}</i>
-              </a>
-            </li>
-            <li>
-              <a href="#" title="{{ article.view }}명이 이 글을 봤습니다.">
-                <i>{{ article.view }}</i>
-              </a>
-            </li>
-            <li>
-              <a href="#" title="카테고리">
-                <i>{{ article.category }}</i>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
 </section>
 {% endblock %}
 

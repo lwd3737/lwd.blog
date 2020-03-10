@@ -11,19 +11,23 @@ class Category(models.Model):
         verbose_name = '카테고리'
         verbose_name_plural = verbose_name
 
+    def align_category(self):
+        tags = Tag.objects.all().order_by('-use_count')[:10]
+        return tags
+
     def __str__(self):
         return self.name
 
 class Article(models.Model):
-    title = models.CharField(max_length=200)
-    category = models.ForeignKey('Category', verbose_name='카테고리', on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
     content = models.TextField(blank=True, null=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    digest = models.TextField(blank=True, null=True)
+    digest = models.CharField(max_length=200, blank=True, null=True)
     tags = models.ManyToManyField('Tag', blank=True, null=True)
     view = models.BigIntegerField(default=0)
-    claps = models.BigIntegerField(default=0)
-    picture = models.CharField(max_length=200, blank=True, null=True)  #타이틀 이미지 주소
+    like = models.BigIntegerField(default=0)
+    #picture = models.CharField(max_length=200, blank=True, null=True)  #타이틀 이미지 주소
+    is_public = models.BooleanField(default=False)
     created_time = models.DateTimeField(auto_now_add=True)
     updated_time = models.DateTimeField(auto_now=True)
 
@@ -40,13 +44,17 @@ class Article(models.Model):
         self.view += 1  #race condition
         self.save(update_fields=['view'])
 
-    def claps(self):
-        self.claps += 1
-        self.save(update_fields=['claps'])
+    def like_count(self):
+        self.like += 1
+        self.save(update_fields=['like'])
+
+    def updated_time_format(self):
+        return self.updated_time.strftime('%Y-%m-%d %H:%M')
 
 
 class Tag(models.Model):
-    tag_name = models.CharField(verbose_name='태그 이름',max_length=30)
+    tag_name = models.CharField(unique=True, verbose_name='태그 이름',max_length=30)
+    use_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.tag_name
@@ -62,7 +70,7 @@ class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     text = models.CharField(max_length=4000)
     like = models.IntegerField(default=0)
-    dislike = models.IntegerField(default=0)
+    is_reply = models.BooleanField(default=False)
     updated_flag = models.BooleanField(default=False)
     created_time = models.DateTimeField(auto_now_add=True)
     updated_time = models.DateTimeField(auto_now=True)

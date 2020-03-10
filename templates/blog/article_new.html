@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+<title>new article</title>
+{% endblock %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'css/article_form.css' %}?ver=4">
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+  <form class="article-form" action="{% static 'blog:new_article' %}" method="post">
+    {% csrf_token %}
+
+    {% for error in non_field_errors %}
+      {{ error }}
+    {% endfor %}
+
+    <div class="form-title form-item">
+      {{ form.title }}
+      {% for error in form.title.errors %}
+        {{ error }}
+      {% endfor %}
+    </div>
+
+    <div class="form-content form-item">
+      {{ form.content }}
+      {% for error in form.content.errors %}
+        {{ error }}
+      {% endfor %}
+    </div>
+
+    <div class="form-digest form-item">
+      {{ form.digest }}
+    </div>
+
+    <div class="form-tags">
+      <form class="tag-add-form">
+        <input type="text" name="tag_name" placeholder="태그 추가...">
+        <button class="btn btn-primary btn-sm" id="form-tag-btn" type="button">추가</button>
+        <ul class="tag-list">
+        </ul>
+      </form>
+
+      <div class="added-tags">
+      </div>
+    </div>
+
+    <div id="article-form-btn">
+      <button class="btn btn-outline-success" type="submit" id="public">공개</button>
+      <button class="btn btn-outline-dark" type="submit" id="save">저장</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript" src="{% static 'js/article_new.js '%}?ver=2"></script>
+{% endblock %}

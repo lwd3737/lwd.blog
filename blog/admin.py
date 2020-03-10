@@ -7,7 +7,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'title', 'digest', 'created_time', 'updated_time', 'is_public']
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
