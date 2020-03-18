@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<h2 class="tag-name">{{ title }}</h2>
+
+{% for article in articles %}
+<li class="article-item box-ui">
+  <div class="article">
+    <h4 class="article-title">
+      <a href="{% url 'blog:detail' article.id %}" title="{{ article.title }}">
+        {{ article.title }}
+      </a>
+    </h4>
+    <p class="article-digest">{{ article.digest|default:"" }}</p>
+    <ul class='article-bottom'>
+      <li>
+        <a class="article-meta-data" title="{{ article.author }}: {{ article.created_time }}에 공개">
+          <img src="{% static 'icon/clock-regular.svg' %}" alt="">
+          {{ article.created_time_format }}
+        </a>
+      </li>
+      <li>
+        <a class="article-meta-data" href="#">
+          <img src="{% static 'icon/user-regular.svg' %}" alt="">
+          {{ article.author }}
+        </a>
+      </li>
+      <li>
+        <a class="article-meta-data" href="#comment" title="댓글로 이동">
+          <img src="{% static 'icon/comment.svg' %}" alt="">
+          {{ article.comments.count }}
+        </a>
+      </li>
+      <li>
+        <a class="article-meta-data" title="뷰">
+          <img src="{% static 'icon/eye-regular.svg' %}" alt="">
+          {{ article.view }}
+        </a>
+      </li>
+    </ul>
+  </div>
+</li>
+{% empty %}
+<h6>검색결과가 존재하지 않습니다.</h6>
+{% endfor %}
+{% endblock %}

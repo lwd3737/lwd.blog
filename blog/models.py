@@ -27,6 +27,7 @@ class Article(models.Model):
     view = models.BigIntegerField(default=0)
     like = models.BigIntegerField(default=0)
     #picture = models.CharField(max_length=200, blank=True, null=True)  #타이틀 이미지 주소
+    popular_evaluation = models.BigIntegerField(default=0)
     is_public = models.BooleanField(default=False)
     created_time = models.DateTimeField(auto_now_add=True)
     updated_time = models.DateTimeField(auto_now=True)
@@ -40,6 +41,12 @@ class Article(models.Model):
     def get_absolute_url(self):
         return reverse('blog:detail', args=(self.id,))
 
+    def tags_count(self):
+        tag_qs = self.tags.all()
+        for tag in tag_qs:
+            count = tag.use_count + 1
+        tag_qs.update(use_count=count)
+
     def view_count(self):
         self.view += 1  #race condition
         self.save(update_fields=['view'])
@@ -48,9 +55,26 @@ class Article(models.Model):
         self.like += 1
         self.save(update_fields=['like'])
 
+    def update_most_popular(self):
+        comment_count = Comment.objects.filter(article__id=self.id).count()
+        self.popular_evaluation = (self.like * 3) + self.view + (comment_count * 2)
+
+    def created_time_format(self):
+        return self.created_time.strftime('%Y-%m-%d %H:%M')
+
     def updated_time_format(self):
         return self.updated_time.strftime('%Y-%m-%d %H:%M')
 
+    def tags_count_sub():
+        tags = self.tags.all()
+        updated_tags = []
+
+        for tag in tags:
+            if tag.use_count > 0:
+                tag.use_count -= 1
+                updated_tags.append(tag)
+
+        tags.objects.bulk_update(updated_tags, ['use_count'])
 
 class Tag(models.Model):
     tag_name = models.CharField(unique=True, verbose_name='태그 이름',max_length=30)

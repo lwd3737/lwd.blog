@@ -7,6 +7,10 @@
   border:none;
 }
 
+.article-form textarea:focus{
+  outline:none;
+}
+
 .form-item{
   border-bottom:1px solid rgba(0,0,0,0.1);
   padding-bottom:7px;
@@ -41,9 +45,25 @@
   overflow:hidden;
 }
 
+.tag-list{
+  width:150px;
+}
+
+.box-ui{
+  padding:10px 0 !important;
+}
+
+.tag-list .tag-item{
+  padding:0 7px;
+}
+
+.tag-list .tag-item:hover{
+  cursor:pointer;
+  background:rgba(0,0,0,0.15);
+}
+
 .added-tags{
   margin-top: 20px;
-
 }
 
 .added-tag{

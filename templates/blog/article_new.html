@@ -45,6 +45,13 @@
       </form>
 
       <div class="added-tags">
+        {% if tags %}
+          {% for tag in tags %}
+            <span class="added-tag" data-id="{{ tag.id }}">
+              {{ tag.tag_name }}<span class="tag-cancel">&#10006;</span>
+            </span>
+          {% endfor %}
+        {% endif %}
       </div>
     </div>
 

@@ -18,7 +18,7 @@ class CommentForm(forms.ModelForm):
 class ArticleForm(forms.ModelForm):
 	class Meta:
 		model = Article
-		fields = ['title', 'content', 'digest', 'tags', 'is_public']
+		fields = ['title', 'content', 'digest',]
 		widgets = {
 			'title': forms.TextInput(attrs={'placeholder': '제목...'}),
 			'content': forms.Textarea(attrs={'placeholder': '내용...', 'resize':'false'}),

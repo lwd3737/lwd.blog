@@ -5,7 +5,7 @@
 body{
   font-size:14px;
   margin:0;
-  padding:0;
+  padding:0 120px;
   min-width:320px;
 }
 
@@ -14,6 +14,10 @@ a{
   text-decoration:none;
 }
 
+a:hover{
+  color:black;
+  text-decoration: none
+}
 img{
   border:none;
 }
@@ -69,12 +73,11 @@ article h3{
   border: 1px solid rgba(0,0,0,0.15);
   border-radius: 7px;
   margin-bottom: 45px;
-  padding: 10px 20px;
+  padding: 10px 15px;
   font-size: 14px;
   box-shadow: 0 1px 5px 3px rgba(0,0,0,0.04);
 }
 
-.blue-text{color:#0181da;}
 
 .home-h4{
   font-size:23px;
@@ -97,10 +100,6 @@ article h3{
   height:70px;
 }
 
-.myheader nav{
-  box-shadow:0 3px 20px 1px rgba(0,0,0,0.14);
-}
-
 .brand-name{
   padding-left:15px;
   font-weight:bold;
@@ -108,11 +107,44 @@ article h3{
 }
 
 .nav-right{
-  padding-right:20px;
+  padding-right:10px 20px;
 }
 
 .nav-right .nav-item{
   margin-right:20px;
+}
+
+.search input{
+  border-radius: 30px;
+  height:30px
+}
+
+.search .submit-btn:hover{
+  cursor:pointer;
+}
+
+.search .hidden-submit{
+  display:none;
+}
+
+/*mysection*/
+
+nav.most-popular-tags{
+  display:flex;
+  justify-content:space-around;
+  padding:20px 0;
+  color:rgba(0,0,0,0.54);
+  font-size:15px;
+  margin-bottom:20px;
+}
+
+.tag-menu:hover{
+  cursor:pointer;
+  color:rgba(0,0,0,1);
+}
+
+.tag-menu-selected{
+  color:rgba(0,0,0,1);
 }
 
 /*section*/
@@ -122,17 +154,8 @@ article h3{
   float:left;
 }
 
-.swiper-slide img{
-  width:845px;
-  height:500px;
-}
-
-.swiper-pagination{
-  text-align:right;
-  color:white;
-  font-weight:bold;
-  font-size:15px;
-  padding:0 20px;
+.most-popular-articles{
+  margin-bottom:50px;
 }
 
 .article-list{
@@ -146,12 +169,13 @@ article h3{
   padding:15px;
 }
 
-.article-list > ul > li{
+.article-list > ul > li, .article-item{
   width:100%;
   margin:auto;
   padding:25px;
   margin-bottom:25px;
   overflow:hidden;
+  list-style: none;
 }
 
 .article-list > ul > li:hover img{
@@ -175,7 +199,7 @@ article h3{
   width:100%;
 }
 
-.article h4{
+.article-title{
   padding:0;
   margin:0;
   font-size:18px;
@@ -211,8 +235,49 @@ article h3{
   overflow:hidden;
 }
 
-.article li:last-child{
+.article-meta-data{
+  color:rgba(0,0,0,0.65) !important;
+}
+
+.article-meta-data img{
+  width:14px;
+  height:14px;
+  margin-bottom:3px;
+}
+
+.most-popular-articles{
+  overflow:hidden;
+  height:270px;
+}
+
+.most-popular-articles .article-title{
+  text-align: center;
+}
+
+#popular-article-1{
+  float:left;
+  width:55%;
+  height:100%;
+  padding: 20px 20px;
+}
+
+#popular-article-1 .article-title{
+  font-size:35px;
+}
+
+#popular-article-1 .article-digest{
+  height:130px;
+}
+
+#popular-article-2{
   float:right;
+  width:40%;
+  margin-bottom:15px;
+}
+
+#popular-article-3{
+  float:right;
+  width:40%;
 }
 
 /*right*/

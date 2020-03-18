@@ -27,20 +27,27 @@
     <div class="post-line box-ui">
       <ul>
         <li>
-          <a title="{{ article.author }}: {{ article.created_time }}에 공개">
-            <i class=''></i>
-            <time>{{ article.created_time }}</time>
+          <a class="article-meta-data" title="{{ article.author }}: {{ article.created_time }}에 공개">
+            <img src="{% static 'icon/clock-regular.svg' %}" alt="">
+            {{ article.created_time_format }}
           </a>
         </li>
         <li>
-          <i class="">{{ article.author }}</i>
+          <a class="article-meta-data" href="#">
+            <img src="{% static 'icon/user-regular.svg' %}" alt="">
+            {{ article.author }}
+          </a>
         </li>
         <li>
-          <a href="#comment" title="댓글로 이동">{{ article.comment }}</a>
+          <a class="article-meta-data" href="#comment" title="댓글로 이동">
+            <img src="{% static 'icon/comment.svg' %}" alt="">
+            {{ article.comments.count }}
+          </a>
         </li>
         <li>
-          <a title="{{ article.view }}">
-            <i class=''>{{ article.view }}</i>
+          <a class="article-meta-data" title="뷰">
+            <img src="{% static 'icon/eye-regular.svg' %}" alt="">
+            {{ article.view }}
           </a>
         </li>
       </ul>
@@ -55,16 +62,9 @@
     <hr>
 
     <div class="article-tag">
-      <ul>
         {% for tag in article.tags.all %}
-        <li>
-          <a href="">
-              title="태그: {{ tag.tag_name }}">
-            {{ tag.tag_name }}
-          </a>&nbsp;
-        </li>
+          <a class="tag" href="">{{ tag.tag_name }}</a>
         {% endfor %}
-      </ul>
     </div>
 
     <div class='my-response'>

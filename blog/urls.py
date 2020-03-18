@@ -26,6 +26,7 @@ urlpatterns = [
     path('my_articles/', views.my_articles, name='my_articles'),
     path('detail/<int:article_pk>/edit/', views.article_edit, name='article_edit'),
     path('detail/<int:article_pk>/delete/', views.article_delete, name='article_delete'),
-    #path('search/', views.search, name='search'),
-    #path('tag/', views.tag, name='tag'),
+    path('tag/<int:tag_pk>/articles/', views.articles_by_tag, name='articles_by_tag'),
+    path('more/tags/', views.more_tags, name='more_tags'),
+    path('search/', views.search, name='search'),
 ]

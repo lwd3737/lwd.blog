@@ -41,6 +41,14 @@
     {% block footer %}
     {% endblock %}
 
+    <script type="text/javascript">
+      const searchBtn = $('.search .submit-btn');
+
+      searchBtn.on('click', function(ev){
+        console.log('search!');
+        $('.search .hidden-submit').click();
+      });
+    </script>
     {% block extra_js %}
     {% endblock %}
   </body>

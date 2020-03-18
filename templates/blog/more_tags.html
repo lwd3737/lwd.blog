@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block extra_style %}
+<style media="screen">
+  .more-tags .title{
+    margin-left:20px;
+    font-weight:bold;
+  }
+
+  .tag-list{
+    display:flex;
+    flex-wrap:wrap;
+  }
+
+  .tag-item{
+    margin:10px 30px;
+    width: 200px;
+    height: 100px;
+    vertical-align: center;
+    text-align: center;
+    /* align-content: flex-start; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="more-tags">
+  <h4 class="title">태그 찾기</h4>
+
+  <div class="tag-list">
+    {% for tag in tags %}
+    <div class="tag-item box-ui">
+      <a class="tag-name" href="{% url 'blog:articles_by_tag' tag.id %}">
+        <h5>
+          #{{ tag.tag_name }}
+        </h5>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</main>
+{% endblock %}

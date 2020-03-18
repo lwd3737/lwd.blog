@@ -2,13 +2,23 @@ from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.http import JsonResponse, Http404, HttpResponse
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from .models import Category, Article, Comment, Tag
 from .forms import CommentForm, ArticleForm
+import json
 
 def index(request):
     #blog homepage
-    article_list = Article.objects.all().order_by('-created_time')[:5]
+    most_popular_articles = Article.objects.all().order_by('-popular_evaluation')[:3]
+    most_popular_id_list = [article.id for article in most_popular_articles]
+
+    most_popular_tags = Tag.objects.all().order_by('-use_count')[:10]
+
+    article_list = Article.objects.exclude(pk__in=most_popular_id_list).order_by('-created_time')
+
     return render(request, 'blog/index.html', {
+        'most_popular_articles':most_popular_articles,
+        'most_popular_tags': most_popular_tags,
         'article_list': article_list,
         'source_id': 'index',
     })
@@ -217,13 +227,46 @@ def comment_reply_delete(request, article_pk, comment_pk, reply_pk):
 @login_required
 def article_new(request):
     if request.method == 'POST':
-        form = ArticleForm(request.POST)
+        print('body data:', request.body)
+        data = json.loads(request.body.decode('utf-8'))
+        print('역직렬화 data:', data)
+        tag_qs = []
+        exist_tags = []
+        created_tags = []
+        tags = data['tags']
+        print('tags:',tags)
+        if tags:
+            for tag in tags:
+                if tag['id']:
+                    exist_tags.append(tag['id'])
+                else:
+                    created_tags.append(Tag(tag_name=tag['name']))
+        if exist_tags:
+            tag_qs.extend(Tag.objects.filter(pk__in=exist_tags))
+        if created_tags:
+            created_tags_name = [tag.tag_name for tag in Tag.objects.bulk_create(created_tags)]
+            created_tags_qs = Tag.objects.filter(tag_name__in=created_tags_name)
+            tag_qs.extend(created_tags_qs)
+        print('exist:', exist_tags, 'created:', created_tags)
+        print('tag_qs:',tag_qs)
+        print('tag_qs:',tag_qs)
+        form = ArticleForm(data=data)
 
         if form.is_valid():
             article = form.save(commit=False)
-            print(article.is_public)
             article.author = request.user
             article.save()
+            if tag_qs:
+                article.tags.set(tag_qs)
+                print(article.tags.all())
+                article.tags_count()
+            if data['is_public'] == 'true':
+                article.is_public = True
+            else:
+                article.is_public = False
+
+            article.save()
+
             return HttpResponse(reverse('blog:my_articles'))
 
     else:
@@ -237,12 +280,19 @@ def tag_search(request):
     print(request.GET)
     tag_name = request.GET.get('tag_name')
     data = {}
-    data['tag_list'] = []
 
     if tag_name:
-        tags = Tag.objects.filter(tag_name__icontains=tag_name)
-        data['tag_list'] = [{'tag_id': tag.id, 'tag_name': tag.name } for tag in tags]
+        tag = Tag.objects.filter(tag_name=tag_name)
+        print(tag)
 
+        if tag:
+            tag = tag[0]
+            tag_data = {'tag_id':tag.id, 'tag_name':tag.tag_name, 'count':tag.use_count}
+            data['tag'] = tag_data
+        related_tags = Tag.objects.filter(tag_name__icontains=tag_name).exclude(tag_name=tag_name).order_by('-use_count')
+        related_tags_data = [{'tag_id': tag.id, 'tag_name': tag.tag_name, 'count':tag.use_count } for tag in related_tags]
+        data['related_tags'] = related_tags_data
+        print(data)
     return JsonResponse(data)
 
 @login_required
@@ -260,22 +310,91 @@ def my_articles(request):
 @login_required
 def article_edit(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk, author=request.user)
+    tags = article.tags.all()
 
     if request.method == 'POST':
-        print(request.POST)
-        form = ArticleForm(request.POST, instance=article)
+        print('body data:', request.body)
+        data = json.loads(request.body.decode('utf-8'))
+        print('역직렬화 data:', data)
+        tag_qs = []
+        exist_tags = []
+        created_tags = []
+        tags = data['tags']
+        print('tags:',tags)
+        if tags:
+            for tag in tags:
+                if tag['id']:
+                    exist_tags.append(tag['id'])
+                else:
+                    created_tags.append(Tag(tag_name=tag['name']))
+        if exist_tags:
+            tag_qs.extend(Tag.objects.filter(pk__in=exist_tags))
+        if created_tags:
+            created_tags_name = [tag.tag_name for tag in Tag.objects.bulk_create(created_tags)]
+            created_tags_qs = Tag.objects.filter(tag_name__in=created_tags_name)
+            tag_qs.extend(created_tags_qs)
+        print('exist:', exist_tags, 'created:', created_tags)
+        print('tag_qs:',tag_qs)
+        form = ArticleForm(data=data, instance=article)
 
         if form.is_valid():
-            form.save()
+            article = form.save(commit=False)
+            print('tag_qs id:', [tag.id for tag in tag_qs])
+            if tag_qs:
+                article.tags.set(tag_qs)
+                print(article.tags.all())
+                article.tags_count()
+            if data['is_public'] == 'true':
+                article.is_public = True
+            else:
+                article.is_public = False
 
-            return redirect('blog:my_articles')
+            article.save()
+
+            return HttpResponse(reverse('blog:my_articles'))
     else:
         form = ArticleForm(instance=article)
+        print(tags)
 
     return render(request, 'blog/article_new.html', {
         'form': form,
+        'tags': tags,
     })
 
 @login_required
 def article_delete(request, article_pk):
-    pass
+    article = get_object_or_404(Article, pk=article_pk, author=request.user)
+
+    if request.method == 'POST':
+        article.delete()
+        return redirect('blog:my_articles')
+
+def articles_by_tag(request, tag_pk):
+    tag = get_object_or_404(Tag, pk=tag_pk)
+    articles = Article.objects.filter(tags__id=tag_pk, is_public=True).order_by('-created_time')
+
+    return render(request, 'blog/articles_by_search.html', {
+        'title':'#' + tag.tag_name,
+        'articles': articles,
+    })
+
+def more_tags(request):
+    tags = Tag.objects.all().order_by('-use_count')[3:]
+
+    return render(request, 'blog/more_tags.html', {
+        'tags':tags,
+    })
+
+def search(request):
+    word = request.GET.get('word')
+
+    if word:
+        articles = Article.objects.filter(Q(is_public=True) & Q(title__icontains=word) | Q(content__icontains=word)
+            | Q(tags__tag_name__icontains=word))
+    else:
+        articles = None
+
+    return render(request, 'blog/articles_by_search.html', {
+        'title': '검색결과',
+        'articles': articles,
+    })

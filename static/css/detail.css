@@ -38,7 +38,7 @@
 
 .post-content h1, .post-content h2, .post-content h3{
   margin:0;
-  padding:5px;
+  padding:5px 0;
 }
 
 .blog-anchor{
@@ -68,29 +68,18 @@
   overflow:hidden;
 }
 
-.article-tag ul{
+.article-tag{
   margin:auto;
-  clear:both;
   text-align:center;
-  float:none;
 }
 
-.article-tag ul li{
-  display:inline;
-  font-size:12px;
-  border:none;
-  border-radius:50px;
-  padding:5px 10px;
-  margin:0 5px;
+.article-tag .tag{
+  margin:10px;
+  background:#e9ecef;
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 15px;
 }
-
-.article-tag ul li a{
-  color:#fff;
-  display:inline-block;
-  margin-bottom:10px;
-}
-
-.article-tag ul li{background:#e9ecef;}
 
 hr{
   width:90%;

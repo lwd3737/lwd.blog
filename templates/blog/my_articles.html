@@ -41,7 +41,10 @@
           </div>
 
           <div class="my-article-digest">
-            {{ article.digest }}
+            {% if article.digest %}
+              {{ article.digest }}
+            {% else %}
+            {% endif %}
           </div>
           <div class="my-article-updated-time">
             {{ article.updated_time_format }}
@@ -64,7 +67,10 @@
           </div>
 
           <div class="my-article-digest">
-            {{ article.digest }}
+            {% if article.digest %}
+              {{ article.digest }}
+            {% else %}
+            {% endif %}
           </div>
           <div class="my-article-updated-time">
             {{ article.updated_time_format }}
@@ -87,6 +93,27 @@
       console.log(url);
       location.href = url;
     });
+
+    $('.my-article-delete').on('click', function(ev){
+      ev.preventDefault();
+
+      const url = this.href;
+      const check = confirm('정말 삭제하시곘습니까?');
+      const token = '{{ csrf_token}}';
+
+      if(check){
+        $.post({
+          url:url,
+          headers: {'X-CSRFToken':token}
+        })
+        .done(data => {
+          location.href = '{% url "blog:my_articles" %}';
+        })
+        .fail((jqXHR, textStatus) => {
+          alert('글을 삭제할 수 없습니다.');
+        })
+      }
+    })
   }
 </script>
 {% endblock %}
