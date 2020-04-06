@@ -64,8 +64,8 @@
     <h4 class='home-h4'>
       <small>최근 게시물</small>
     </h4>
-    <ul>
-      {% for article in article_list %}
+    <ul class="articles-wrapper">
+      {% for article in first_page_articles %}
       <li id='new' class="box-ui">
         <div class="article">
           <h4 class="article-title">
@@ -107,10 +107,18 @@
   </div>
 
 </section>
+
+<aside class="right">
+  {% include 'right.html' %}
+</aside>
+
 {% endblock %}
 
 {% block extra_js %}
 <script type="text/javascript">
-
+const articlesWrapper = '.articles-wrapper';
+const path = '/blog/articles?page=';
+const lastPage = '{{ first_page_articles.paginator.num_pages }}';
+new InfiniteScroll(path, articlesWrapper, lastPage);
 </script>
 {% endblock %}

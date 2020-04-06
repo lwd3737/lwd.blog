@@ -267,7 +267,7 @@ const comment = {
   },
 
   infiniteScroll(){
-    const commentListId = 'comment-list';
+    const commentListId = '.comment-list';
     const detailId = location.pathname.split('/')[3];
     const paginatePath = `/blog/detail/${detailId}/comments_display?page=`;
     const lastPage = $('.comment-list').data('last-page');

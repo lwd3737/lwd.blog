@@ -1,0 +1,52 @@
+{% extends 'accounts/base.html' %}
+
+{% block style %}
+<style media="screen">
+  .profile-wrapper{
+    margin: 0 450px;
+    background: white;
+    padding:50px 0;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+  }
+
+  .profile-title{
+    margin-bottom:60px;
+  }
+
+  .profile-field{
+    text-align:left;
+    margin:0 0 25px 110px;
+  }
+
+  .profile-field label{
+    font-weight:bold;
+    margin:0
+  }
+
+  .profile-field-val{
+    color:gray;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-wrapper">
+  <h1 class="profile-title">내 프로필</h1>
+
+  <div class="profile-field">
+    <label>아이디</label>
+    <div class="profile-field-val">
+      {{ user.username}}
+    </div>
+  </div>
+  <div class="profile-field">
+    <label>이메일</label>
+    <div class="profile-field-val">
+      {% if user.email %}
+        {{ user.email }}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

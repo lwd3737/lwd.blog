@@ -20,7 +20,7 @@ class InfiniteScroll{
     if(path === undefined || wrapperId === undefined) throw Error('no parameter');
     this.path = path;
     this.pNum = 2;
-    this.wNode = document.querySelector(`.${wrapperId}`);
+    this.wNode = document.querySelector(`${wrapperId}`);
     this.wrapperId = wrapperId;
     this.lastPage = lastPage;
     this.enable = true;
@@ -67,7 +67,7 @@ class InfiniteScroll{
   getChildItemsByAjaxHTML(HTMLText){
     const newHTML = document.createElement('html');
     newHTML.innerHTML = HTMLText;
-    const childItems = newHTML.querySelectorAll(`.comment-item-wrapper`);
+    const childItems = newHTML.querySelectorAll(`${this.wrapperId} > *`);
     return childItems;
   }
 

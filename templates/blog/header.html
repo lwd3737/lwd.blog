@@ -17,15 +17,25 @@
             <input class="hidden-submit" type="submit">
           </form>
         </li>
-        <li class="nav-item dropdown">
+        <li class="profile nav-item dropdown">
+          {% if user.is_authenticated %}
           <a class="dropdown-toggle" href="#" role="button" id="profileMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img src="{% static 'icon/user-circle-solid.svg' %}" width="35px" alt="">
+            <img src="{% static 'icon/user-circle-solid.svg' %}" width="28px" alt="">
           </a>
 
           <div class="dropdown-menu" aria-labelledby="profileMenu">
-            <a class="dropdown-item" href="{% url 'blog:article_new' %}">New Article</a>
-            <a class="dropdown-item" href="{% url 'blog:my_articles' %}">My Article</a>
+            <a class="dropdown-item" href="{% url 'blog:article_new' %}">글쓰기</a>
+            <a class="dropdown-item" href="{% url 'blog:my_articles' %}">내가 작성한 글</a>
+            <hr>
+            <a class="dropdown-item" href="{% url 'profile' %}">내 프로필</a>
+            <a class="dropdown-item" href="{% url 'logout' %}">로그아웃</a>
           </div>
+          {% else %}
+          <a id="signup" href="{% url 'signup' %}">회원가입</a>
+          <a class="btn btn-success" id="login" href="{% url 'login' %}?next={{ request.path }}">
+            로그인
+          </a>
+          {% endif %}
         </li>
       </ul>
     </div>

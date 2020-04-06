@@ -1,0 +1,64 @@
+{% load staticfiles %}
+
+<div class="latest-news">
+  <h6 class='news-title'>최신 뉴스</h6>
+
+  <div class="corona-news">
+    <div class="topic-title">
+      코로나 환자 현황 <small class="live-date">{{ live_date }}</small>
+    </div>
+    <hr>
+
+    <div class="today-live-num">
+      {% for item in today_live_num %}
+      <div class="data-item">
+        {{ item.title }} <strong>{{ item.data }}</strong>
+      </div>
+      {% endfor %}
+    </div>
+
+    <hr>
+
+    <div class="live-nums">
+      {% for item in live_nums %}
+      <div class="data-item">
+        <div class="title">
+          {{ item.title }}
+        </div>
+        <div class="data">
+          <div class="num">
+            {{ item.num}}
+          </div>
+          <small class="before">
+            {{ item.before }}
+          </small>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="reading-list">
+  <h6 class="title">
+    <img src="{% static 'icon/bookmark-regular.svg' %}" width="16px" alt="">
+    &nbsp;
+    최근에 읽은 게시물들
+  </h6>
+
+  {% for reading_item in reading_list %}
+  <div class="reading-item">
+    <h6>
+      <a href="{% url 'blog:detail' reading_item.id %}">
+        {{ reading_item.title }}
+      </a>
+    </h6>
+    <div class="author">
+      {{ reading_item.author}}
+    </div>
+    <small class="created-time">
+      {{ reading_item.created_time }}
+    </small>
+  </div>
+  {% endfor %}
+</div>

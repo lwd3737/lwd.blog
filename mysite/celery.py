@@ -22,4 +22,8 @@ app.conf.beat_schedule = {
         'task': 'blog.tasks.popular_articles_update',
         'schedule': crontab(minute='*/30', hour='*/2')
     },
+    'corona-news-update-contrab':{
+        'task': 'blog.tasks.corona_news_update',
+        'schedule': crontab(minute=0, hour='9,12,15,18')
+    }
 }

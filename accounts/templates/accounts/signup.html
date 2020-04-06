@@ -1,0 +1,48 @@
+{% extends 'accounts/base.html' %}
+
+{% block style %}
+<style media="screen">
+  .signup-title{
+    margin-bottom:50px;
+  }
+
+  .signup-form{
+    margin: 0 430px;
+    padding: 30px 0;
+    border:1px solid rgba(0,0,0,0.1);
+    border-radius:8px;
+    background:white;
+  }
+
+  .form-group{
+    text-align:left;
+    margin-bottom:30px;
+  }
+
+  .signup-input{
+    background:white !important;
+  }
+
+  .field-error{
+    color:red;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<form class="signup-form" action="{% url 'signup' %}" method="post">
+  {% csrf_token %}
+
+  <h3 class="signup-title">회원가입</h3>
+
+  {% for field in form %}
+  <div class="form-group {% if field.errors|length > 0 %}has-error{%endif %}">
+    {{ field }}
+    {% for error in field.errors %}
+        <small class="field-error">{{ error }}</small>
+    {% endfor %}
+  </div>
+  {% endfor %}
+  <input class="btn btn-primary" type="submit" class="" value="가입하기">
+</form>
+{% endblock %}

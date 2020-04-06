@@ -21,7 +21,6 @@
     {% endif %}
   </div>
 
-  <hr class="comment-between">
 
   <ul class="comment-list" data-last-page="{{ pagecomments.paginator.num_pages }}">
     {% if comments.exists %}
@@ -112,7 +111,6 @@
           </div>
         </div>
       </div>
-      <hr class="comment-between">
       {% endfor %}
     {% endif %}
   </ul>
@@ -133,7 +131,9 @@
     {% else %}
     <form class="non-authenticated-form" action="" method="post">
       <div class="comment-text">
-        <textarea type='text' disabled='true'>댓글을 작성하려면 로그인 해주세요.</textarea>
+        <textarea type='text' disabled='true'>댓글을 작성하려면
+          <a href="{% url 'login' %}">로그인</a> 해주세요.
+        </textarea>
       </div>
     </form>
     {% endif %}
@@ -188,7 +188,6 @@
         {% endif %}
       </div>
     </div>
-    <hr class="comment-between">
   </div>
 
 

@@ -33,18 +33,15 @@
       {% endblock %}
     </div>
 
-    <aside class="right">
-      {% block right %}
-      {% endblock %}
-    </aside>
-
-    {% block footer %}
-    {% endblock %}
-
     <script type="text/javascript">
       const searchBtn = $('.search .submit-btn');
 
       searchBtn.on('click', function(ev){
+        const wordLen = $.trim($('.search input[type="search"]').val()).length;
+        if(wordLen <= 1){
+          alert('2글자 이상 입력하세요.');
+          return;
+        }
         console.log('search!');
         $('.search .hidden-submit').click();
       });

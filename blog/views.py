@@ -3,39 +3,100 @@ from django.http import JsonResponse, Http404, HttpResponse
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from .models import Category, Article, Comment, Tag
+from .models import Category, Article, Comment, Tag, News
 from .forms import CommentForm, ArticleForm
 import json
+
+def get_news_data():
+    corona_obj = get_object_or_404(News, topic='corona')
+    corona_data = corona_obj.data
+    print('corona data:', corona_data)
+    context = {
+        'today_live_num':corona_data['today_live_num'],
+        'live_nums':corona_data['live_nums'],
+        'live_date': corona_data['live_date'],
+    }
+    return context
+
+def reading_list_set_cookie(request, response, article):
+    reading_list_cookie = request.COOKIES.get('reading-list', '')
+    print('cookie:', reading_list_cookie)
+    if reading_list_cookie:
+        reading_list = reading_list_cookie.split('&')
+        print(str(article.id) in reading_list)
+        if not str(article.id) in reading_list:
+            if len(reading_list) >= 5:
+                del(reading_list[0])
+                reading_list.append(str(article.id))
+            else:
+                reading_list.append(str(article.id))
+            print('reading list:', reading_list)
+            reading_list_str = '&'.join(reading_list)
+            response.set_cookie('reading-list', reading_list_str)
+    else:
+        response.set_cookie('reading-list', article.id)
+
+    return response
+
+def reading_list_get_cookie(request):
+    reading_list_cookie = request.COOKIES.get('reading-list', '')
+    reading_list_ids = reading_list_cookie.split('&')
+    reading_list = Article.objects.filter(id__in=reading_list_ids).reverse()
+    context = {}
+    context['reading_list'] = reading_list
+
+    print('cookie:', reading_list_cookie, 'queryset:', reading_list)
+
+    return context
 
 def index(request):
     #blog homepage
     most_popular_articles = Article.objects.all().order_by('-popular_evaluation')[:3]
     most_popular_id_list = [article.id for article in most_popular_articles]
-
     most_popular_tags = Tag.objects.all().order_by('-use_count')[:10]
 
     article_list = Article.objects.exclude(pk__in=most_popular_id_list).order_by('-created_time')
+    paginator = Paginator(article_list, 10)
+    first_page_articles = paginator.get_page(1)
 
-    return render(request, 'blog/index.html', {
+    context = {
         'most_popular_articles':most_popular_articles,
         'most_popular_tags': most_popular_tags,
-        'article_list': article_list,
+        'first_page_articles': first_page_articles,
         'source_id': 'index',
+    }
+
+    context.update(get_news_data())
+    context.update(reading_list_get_cookie(request))
+
+    return render(request, 'blog/index.html', context)
+
+def get_articles(request):
+    article_list = Article.objects.all().order_by('-created_time')
+    paginator = Paginator(article_list, 10)
+    page = request.GET.get('page')
+    page_articles = paginator.get_page(page)
+
+    return render(request, 'blog/articles.html', {
+        'page_articles': page_articles,
     })
 
 def detail(request, pk):
     article = get_object_or_404(Article, pk=pk)
 
-    print('article',article)
     if article.is_public:
         article.view_count()
     else:
         if article.author != request.user:
             raise Http404('비공개 게시물입니다.')
 
-    return render(request, 'blog/detail.html', {
+    response = render(request, 'blog/detail.html', {
         'article': article,
     })
+
+    response = reading_list_set_cookie(request, response, article)
+
+    return response
 
 def comments_display(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
@@ -395,6 +456,6 @@ def search(request):
         articles = None
 
     return render(request, 'blog/articles_by_search.html', {
-        'title': '검색결과',
+        'title': '검색결과:{}'.format(word),
         'articles': articles,
     })

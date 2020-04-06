@@ -16,3 +16,7 @@ class CommentAdmin(admin.ModelAdmin):
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = ['id', 'tag_name', 'use_count']
+
+@admin.register(News)
+class NewsAdmin(admin.ModelAdmin):
+    pass

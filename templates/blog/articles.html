@@ -1,0 +1,45 @@
+{% load staticfiles %}
+
+<div class="articles-wrapper">
+  {% for article in page_articles %}
+  <li id='new' class="box-ui">
+    <div class="article">
+      <h4 class="article-title">
+        <a href="{% url 'blog:detail' article.pk %}" title="{{ article.title }}">
+          {{ article.title }}
+        </a>
+      </h4>
+      <p class="article-digest">{{ article.digest|default:"" }}</p>
+      <ul class='article-bottom'>
+        <li>
+          <a class="article-meta-data" title="{{ article.author }}: {{ article.created_time }}에 공개">
+            <img src="{% static 'icon/clock-regular.svg' %}" alt="">
+            {{ article.created_time_format }}
+          </a>
+        </li>
+        <li>
+          <a class="article-meta-data" href="#">
+            <img src="{% static 'icon/user-regular.svg' %}" alt="">
+            {{ article.author }}
+          </a>
+        </li>
+        <li>
+          <a class="article-meta-data" href="#comment" title="댓글로 이동">
+            <img src="{% static 'icon/comment.svg' %}" alt="">
+            {{ article.comments.count }}
+          </a>
+        </li>
+        <li>
+          <a class="article-meta-data" title="뷰">
+            <img src="{% static 'icon/eye-regular.svg' %}" alt="">
+            {{ article.view }}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </li>
+  {% empty %}
+  <hr>
+  <small>더이상 읽을 게시물이 없습니다.</small>
+  {% endfor %}
+</div>

@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django_mysql.models import JSONField, Model
 
 class Category(models.Model):
     name = models.CharField(verbose_name='카테고리', max_length=30)
@@ -116,3 +117,10 @@ class CommentReply(Comment):
     class Meta:
         proxy = True
         ordering = ['created_time']
+
+class News(Model):
+    topic = models.CharField(max_length=100)
+    data = JSONField(null=True)
+
+    def __str__(self):
+        return self.topic

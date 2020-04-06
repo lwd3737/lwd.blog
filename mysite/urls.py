@@ -6,6 +6,8 @@ from django.contrib.staticfiles.views import serve
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('blog/', include('blog.urls')),
+    path('accounts/', include('accounts.urls')),
+    path('social/connect/', include('allauth.urls')),
 ]
 
 '''

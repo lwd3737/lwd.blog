@@ -1,0 +1,65 @@
+{% extends 'accounts/base.html' %}
+
+{% block style %}
+<style media="screen">
+  .login-title{
+    margin-bottom:50px;
+  }
+
+  .login-form{
+    margin: 0 430px;
+    padding: 30px 0;
+    border:1px solid rgba(0,0,0,0.1);
+    border-radius:8px;
+    background:white;
+  }
+
+  .login-input{
+    margin-bottom:30px;
+    background:white !important;
+  }
+
+</style>
+{% endblock %}
+
+{% block content %}
+{% if form.errors %}
+<div class="error-msg alert alert-danger">
+  <p class="msg">아이디와 비밀번호가 일치하지 않습니다.</p>
+</div>
+{% endif %}
+
+{% if next %}
+  {% if user.is_authenticated %}
+  <div class="access-not-allowed-reason alert alert-danger">
+    <p class='msg'>
+      이 페이지에 대한 접근 권한이 없습니다. 계속 진행하고 싶다면 접근이 가능한
+      계정으로 로그인해주세요.
+    </p>
+  </div>
+  {% endif %}
+{% endif %}
+
+<form class="login-form" action="{% url 'login' %}" method="post">
+  {% csrf_token %}
+
+  <h3 class='login-title'>로그인</h3>
+
+  <div class="form-group">
+    {{ form.username }}
+  </div>
+  <div class="form-group">
+    {{ form.password }}
+  </div>
+
+  <input class="btn btn-primary" type="submit" class="" value="로그인">
+  <input type="hidden" name="next" value="{{ next }}">
+
+</form>
+
+{% load socialaccount %}
+{% providers_media_js %}
+<a href="{% provider_login_url "facebook" method="js_sdk" %}" class="btn btn-block btn-social btn-facebook" style="background-color:#3b5998;text-align:center">
+               Sign in with Facebook
+ </a>
+{% endblock %}
